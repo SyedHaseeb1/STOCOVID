@@ -817,7 +817,7 @@ public class HomeFragment extends Fragment {
                             totalcurrent_txt.setText(TotalActive);
                             critical_txt.setText(TotalCritical);
 
-                            datetxt.setText("As of " + Date);
+                            datetxt.setText("As of " + Date.replace("/","-"));
 
 
 //                            activetxt.setText(getFormatedAmount(Integer.parseInt(activeS)) + "");
