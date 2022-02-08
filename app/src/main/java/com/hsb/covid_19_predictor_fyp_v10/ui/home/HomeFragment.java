@@ -815,7 +815,7 @@ public class HomeFragment extends Fragment {
                             recoveredtxt.setText(TotalRecovered);
                             affectedtxt.setText(TodayCases);
                             todaydeaths.setText(TodayDeaths);
-                            today_recovered_num.setText(TodayRecovered+"");
+                            today_recovered_num.setText(TodayRecovered);
                             totalcurrent_txt.setText(TotalActive);
                             critical_txt.setText(TotalCritical);
                             population_txt.setText(Population);
