@@ -131,7 +131,7 @@ public class HomeFragment extends Fragment {
     List<String> array1;
     //UI
     TextView activetxt, deathstxt, recoveredtxt, affectedtxt, critical_num,
-            totaltxt,today_tests_txt;
+            totaltxt, today_tests_txt;
     String activeS, deathS, recoverS, affectS, seriousS;
     Button learnmore;
     ImageView settings;
@@ -147,7 +147,7 @@ public class HomeFragment extends Fragment {
     TextView today_recovered_num, critical_txt, todaydeaths, totalcurrent_txt;
     String New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/";
     String New_Api_Link_Global_Yesterday1 = "https://corona.lmao.ninja/v2/countries/";
-//    String New_Api_Link_Global = "https://corona.lmao.ninja/v2/all?";
+    //    String New_Api_Link_Global = "https://corona.lmao.ninja/v2/all?";
     TextView positivity_ratio_txt;
 
 
@@ -260,11 +260,9 @@ public class HomeFragment extends Fragment {
             }
         }, 1000);
 
-        swipe_L.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
+        swipe_L.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh()
-            {
+            public void onRefresh() {
                 new Json_NEW_API().execute();
                 new Json_NEW_API_Positvity().execute();
             }
@@ -291,56 +289,54 @@ public class HomeFragment extends Fragment {
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     Toast.makeText(getContext(), "You have selected " + spinner.getSelectedItem().toString()
                             + " as your current place.", Toast.LENGTH_SHORT).show();
-                   new Handler().postDelayed(new Runnable() {
-                       @Override
-                       public void run() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                   country_name = spinner.getSelectedItem().toString().trim();
-                    progressDialog.setMessage("Loading..");
-                    //progressDialog.show();
+                            country_name = spinner.getSelectedItem().toString().trim();
+                            progressDialog.setMessage("Loading..");
+                            //progressDialog.show();
 //                    Log.e("page1", "spinner");
 
 
-                    if (country_name.equals("Global")) {
-                        New_Api_Link_Global = "https://corona.lmao.ninja/v2/all?";
-                        new Json_NEW_API().execute();
-                        new Json_NEW_API_Positvity().execute();
-                    }
+                            if (country_name.equals("Global")) {
+                                New_Api_Link_Global = "https://corona.lmao.ninja/v2/all?";
+                                new Json_NEW_API().execute();
+                                new Json_NEW_API_Positvity().execute();
+                            } else {
+                                cc++;
+                                if (cc < 2) {
+                                    activetxt.setText("");
+                                    deathstxt.setText("");
+                                    recoveredtxt.setText("");
+                                    affectedtxt.setText("");
+                                    todaydeaths.setText("");
+                                    today_recovered_num.setText("");
+                                    totalcurrent_txt.setText("");
+                                    critical_txt.setText("");
+                                    positivity_ratio_txt.setText("");
+                                    datetxt.setText("As of ");
+                                    New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/" + country_name + "?";
+                                    //new json_data().execute();
+                                    new Json_NEW_API().execute();
+                                    new Json_NEW_API_Positvity().execute();
 
-                    else {
-                        cc++;
-                        if (cc < 2) {
-                            activetxt.setText("");
-                            deathstxt.setText("");
-                            recoveredtxt.setText("");
-                            affectedtxt.setText("");
-                            todaydeaths.setText("");
-                            today_recovered_num.setText("");
-                            totalcurrent_txt.setText("");
-                            critical_txt.setText("");
-                            positivity_ratio_txt.setText("");
-                            datetxt.setText("As of ");
-                            New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/" + country_name + "?";
-                            //new json_data().execute();
-                            new Json_NEW_API().execute();
-                            new Json_NEW_API_Positvity().execute();
 
+                                }
+                                //new json_data().execute();
+                                New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/" + country_name + "?";
+
+                                new Json_NEW_API().execute();
+                                new Json_NEW_API_Positvity().execute();
+                                Log.e("New_Link", New_Api_Link_Global);
+                                // new json_data_country().execute();
+                                editor.putString("Country", country_name);
+                                editor.apply();
+
+                            }
 
                         }
-                        //new json_data().execute();
-                        New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/" + country_name + "?";
-
-                        new Json_NEW_API().execute();
-                        new Json_NEW_API_Positvity().execute();
-                        Log.e("New_Link", New_Api_Link_Global);
-                        // new json_data_country().execute();
-                        editor.putString("Country", country_name);
-                        editor.apply();
-
-                    }
-
-                       }
-                   },0);
+                    }, 0);
                 }
 
                 @Override
@@ -365,14 +361,14 @@ public class HomeFragment extends Fragment {
                 current_country = getLocation(context) + "";
 
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            int spinnerPosition = spinnerArrayAdapter.getPosition(current_country);
-                            spinner.setSelection(spinnerPosition);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int spinnerPosition = spinnerArrayAdapter.getPosition(current_country);
+                        spinner.setSelection(spinnerPosition);
 
-                        }
-                    });
+                    }
+                });
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -425,8 +421,8 @@ public class HomeFragment extends Fragment {
             }
         }
 
-        if (country_name==null){
-            country_name="Global";
+        if (country_name == null) {
+            country_name = "Global";
         }
         return country_name + "";
     }
@@ -623,23 +619,26 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    long P_Ratio=0;
-    long Today_Cases=0;
+    long P_Ratio = 0;
+    long Today_Cases = 0;
+
     //COVID NEW
+    long ratio=0;
     class Json_NEW_API_Positvity extends AsyncTask<Void, String, String> {
         @Override
         protected void onPostExecute(String s) {
-           // new Json_NEW_API_Positvity().execute();
-            try {    P_Ratio=P_Ratio/Today_Cases;
-            Log.e("N_C_P",P_Ratio+"");
 
+            // new Json_NEW_API_Positvity().execute();
+            try {
+                ratio = P_Ratio / Today_Cases;
+                Log.e("N_C_P", ratio + "");
 
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         positivity_ratio_txt.setTextSize(14f);
-                        positivity_ratio_txt.setText(P_Ratio+" %");
+                        positivity_ratio_txt.setText(ratio + " %");
 
                     }
                 });
@@ -662,7 +661,7 @@ public class HomeFragment extends Fragment {
         protected String doInBackground(Void... voids) {
 
             try {
-                URL url = new URL(New_Api_Link_Global+"yesterday=true&strict=true&query");
+                URL url = new URL(New_Api_Link_Global + "yesterday=true&strict=true&query");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
@@ -695,15 +694,14 @@ public class HomeFragment extends Fragment {
 
                     }
                     long Yesterday_Tests = Long.parseLong(map.get("tests"));
-                    P_Ratio-=Yesterday_Tests;
+                    P_Ratio -= Yesterday_Tests;
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            today_tests_txt.setText(getFormatedAmount(P_Ratio)+"");
+                            today_tests_txt.setText(getFormatedAmount(P_Ratio) + "");
 
                         }
                     });
-
 
 
                 } catch (JSONException e) {
@@ -721,7 +719,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-        class Json_NEW_API extends AsyncTask<Void, String, String> {
+    class Json_NEW_API extends AsyncTask<Void, String, String> {
 
         @Override
         protected void onPreExecute() {
