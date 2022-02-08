@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_L"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="56dp"
+    android:background="@color/white"
+    android:fillViewport="true"
+    android:theme="@style/DarkTheme"
+    tools:context=".ui.home.HomeFragment">
+
+    <ScrollView
+        android:id="@+id/main_L"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <RelativeLayout
+                android:id="@+id/topL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/blue_round_corners"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/settings"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toStartOf="@+id/notification"
+                    android:src="@drawable/ic_baseline_settings_24"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/notification"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_notifications_black_24dp"
+                    app:tint="@color/white" />
+
+                <RelativeLayout
+                    android:id="@+id/dropdown_L"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/notification"
+                    android:gravity="center_vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/covid19text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="20dp"
+                        android:fontFamily="@font/baloo_thambi"
+                        android:gravity="center"
+                        android:text="Covid-19"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+
+                        />
+
+                    <Spinner
+                        android:id="@+id/simpleSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toEndOf="@+id/covid19text"
+                        android:background="@drawable/white_round"
+                        android:padding="8dp"
+                        android:popupElevation="9dp"
+                        android:textAlignment="center" />
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/buttonsL"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_below="@id/dropdown_L"
+                    android:layout_marginHorizontal="40dp"
+                    android:background="@drawable/blue_round_light"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:visibility="gone"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/mycountrybtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/white_corner_round"
+                        android:paddingHorizontal="10dp"
+                        android:text="My Country"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/globalbtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:paddingHorizontal="10dp"
+                        android:text="Global"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/timeL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/buttonsL"
+                    android:layout_marginHorizontal="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:weightSum="3">
+
+                    <TextView
+
+                        android:id="@+id/totaltxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/white_round"
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="3dp"
+                        android:text="Total"
+                        android:textAlignment="center"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/timeL"
+                        android:layout_centerHorizontal="true"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/baloo_thambi"
+                        android:text="Date 2020-12-25"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/boxesL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/timeL"
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:id="@+id/a_d_L"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="2">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_bg"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/activetxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="Confirmed"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:id="@+id/activenum"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/activetxt"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/green_bg"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/recoverdtxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="Recovered"
+
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:id="@+id/recoverdnum"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/recoverdtxt"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/r_a_s_L"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/a_d_L"
+                        android:layout_marginTop="10dp"
+                        android:weightSum="3">
+
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/yellow_bg"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/affectedtxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="New Cases"
+                                android:textColor="@color/white"
+
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/affectednum"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/affectedtxt"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/purple_bg"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/serioustxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="New Deaths"
+
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/todaydeaths_num"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/serioustxt"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/red_bg"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/deathtxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="Deaths"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/deathsnum"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/deathtxt"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/boxesL_R3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/boxesL"
+                    android:paddingHorizontal="10dp">
+
+
+                    <LinearLayout
+                        android:id="@+id/r_a_s_L_r3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="3">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/green_bg"
+                            android:paddingHorizontal="5dp"
+                            android:paddingVertical="10dp">
+
+                            <TextView
+                                android:id="@+id/today_recovered"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="New Recovered"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/today_recovered_num"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/today_recovered"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/yellow_bg"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/totalcurrent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+
+                                android:text="Active"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/totalcurrent_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/totalcurrent"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/purple_bg"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/critical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="Critical"
+
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/critical_num"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/critical"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_marginVertical="10dp"
+                    android:id="@+id/boxesL_R4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/boxesL_R3"
+                    android:paddingHorizontal="10dp">
+
+
+                    <LinearLayout
+                        android:id="@+id/r_a_s_L_r4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="3">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_bg"
+                            android:paddingHorizontal="5dp"
+                            android:paddingVertical="10dp">
+
+                            <TextView
+                                android:id="@+id/positvity_ratio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="Positivity Ratio"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/positvity_ratio_num"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/positvity_ratio"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/yellow_bg"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/today_tests"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+
+                                android:text="Today Tests"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/today_tests_num"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/today_tests"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/purple_bg"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/critical1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="Critical"
+
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/critical_num1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/critical1"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/alfa_slab_one"
+                                android:text="@string/loading"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/topL"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/preventiontxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/alfa_slab_one"
+                    android:text="Prevention"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:id="@+id/preventionicons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/preventiontxt"
+                    android:weightSum="3">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/washhands" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/usemask" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/avoidcontact" />
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/preventionicons"
+                    android:layout_marginVertical="10dp"
+                    android:elevation="5dp"
+                    android:padding="10dp"
+                    app:cardBackgroundColor="@color/light_pink"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/alfa_slab_one"
+                            android:text="Did you know !!!"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/prevent_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="10dp"
+                            android:text="@string/didyouknow"
+                            android:textColor="@color/white" />
+
+                        <Button
+                            android:id="@+id/learnmorebtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/blue_bg"
+                            android:text="Learn more"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/list_L"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:padding="10dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:elevation="8dp"
+            app:cardBackgroundColor="@color/graysh3"
+            app:cardCornerRadius="10dp"
+            android:id="@+id/main_L"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/flag_img"
+                        android:layout_width="55dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="start"
+                        android:background="@drawable/grayeshbg"
+                        android:padding="6dp"
+                        android:src="@drawable/flag_bosnia" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_toStartOf="@id/newcases_txt"
+                        android:layout_toEndOf="@+id/flag_img"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/counrtyname_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/alfa_slab_one"
+                            android:letterSpacing="0.09"
+                            android:text="Pakistan"
+                            android:textAlignment="textStart"
+                            android:textColor="#212121"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/provincename_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/counrtyname_txt"
+                            android:layout_alignStart="@id/counrtyname_txt"
+                            android:layout_alignParentEnd="true"
+                            android:lines="2"
+                            android:text=" aksj aksj akjasdasdasdasds"
+                            android:textAlignment="textStart"
+                            android:textColor="#212121" />
+
+                        <TextView
+                            android:id="@+id/danger_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/counrtyname_txt"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="5dp"
+                            android:layout_toEndOf="@id/provincename_txt"
+                            android:text="In Danger"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/red"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+
+                    <TextView
+                        android:id="@+id/newcases_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_weight="1"
+                        android:text="7958+\nCases"
+                        android:textAlignment="center"
+                        android:textColor="#212121" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:weightSum="2">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/grayeshbg"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/totalcases_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/black"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Cases"
+                                android:textColor="@color/graysh" />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/grayeshbg"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/totaldeaths_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/red"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Deaths"
+                                android:textColor="@color/graysh" />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+</RelativeLayout>
