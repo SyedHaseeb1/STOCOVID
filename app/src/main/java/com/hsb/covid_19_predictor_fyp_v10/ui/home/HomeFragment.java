@@ -148,7 +148,7 @@ public class HomeFragment extends Fragment {
     String New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/";
     String New_Api_Link_Global_Yesterday1 = "https://corona.lmao.ninja/v2/countries/";
     //    String New_Api_Link_Global = "https://corona.lmao.ninja/v2/all?";
-    TextView positivity_ratio_txt;
+    TextView positivity_ratio_txt,population_txt;
 
 
     @SuppressLint("ResourceType")
@@ -179,6 +179,7 @@ public class HomeFragment extends Fragment {
         swipe_L = root.findViewById(R.id.swipe_L);
         positivity_ratio_txt = root.findViewById(R.id.positvity_ratio_num);
         today_tests_txt = root.findViewById(R.id.today_tests_num);
+        population_txt = root.findViewById(R.id.population_num);
 
 
         TextView prevent_txt;
@@ -315,6 +316,7 @@ public class HomeFragment extends Fragment {
                                     totalcurrent_txt.setText("");
                                     critical_txt.setText("");
                                     positivity_ratio_txt.setText("");
+                                    population_txt.setText("");
                                     datetxt.setText("As of ");
                                     New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/" + country_name + "?";
                                     //new json_data().execute();
@@ -816,6 +818,7 @@ public class HomeFragment extends Fragment {
                             today_recovered_num.setText(TodayRecovered);
                             totalcurrent_txt.setText(TotalActive);
                             critical_txt.setText(TotalCritical);
+                            population_txt.setText(Population);
 
                             datetxt.setText("As of " + Date.replace("/","-"));
 

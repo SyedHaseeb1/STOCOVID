@@ -528,20 +528,20 @@
                             android:padding="10dp">
 
                             <TextView
-                                android:id="@+id/critical1"
+                                android:id="@+id/population"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
-                                android:text="Critical"
+                                android:text="Population"
 
                                 android:textColor="@color/white"
                                 android:textSize="12sp" />
 
                             <TextView
-                                android:id="@+id/critical_num1"
+                                android:id="@+id/population_num"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/critical1"
+                                android:layout_below="@+id/population"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginTop="20dp"
                                 android:fontFamily="@font/alfa_slab_one"
