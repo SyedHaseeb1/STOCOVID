@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -14,7 +13,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -24,23 +23,30 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hsb.covid_19_predictor_fyp_v10.databinding.ActivityMainBinding;
-import com.hsb.covid_19_predictor_fyp_v10.ui.dashboard.DashboardFragment;
+import com.hsb.covid_19_predictor_fyp_v10.ui.analysis.Analysis;
+import com.hsb.covid_19_predictor_fyp_v10.ui.covid.Covid;
+import com.hsb.covid_19_predictor_fyp_v10.ui.crypto.Crypto;
 import com.hsb.covid_19_predictor_fyp_v10.ui.home.HomeFragment;
 import com.hsb.covid_19_predictor_fyp_v10.ui.notifications.NotificationsFragment;
+import com.hsb.covid_19_predictor_fyp_v10.ui.stock.StockFragment;
 
 public class MainActivity extends AppCompatActivity {
     final Fragment fragment1 = new HomeFragment();
-    final Fragment fragment2 = new DashboardFragment();
-    final Fragment fragment3 = new NotificationsFragment();
+    final Fragment fragment2 = new Covid();
+    final Fragment fragment3 = new StockFragment();
+    final Fragment fragment4 = new Crypto();
+    final Fragment fragment5 = new Analysis();
     Fragment active = fragment1;
     private ActivityMainBinding binding;
     MainActivity activity;
+    ConstraintLayout main_L;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         activity=this;
-       load();
+
+        load();
     }
 
     public void load(){
@@ -62,7 +68,16 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             setContentView(binding.getRoot());
-
+            main_L=findViewById(R.id.container);
+            try {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                boolean theme_dark = preferences.getBoolean("theme_dark", false);
+                if (theme_dark) {
+                    main_L.setBackgroundColor(getResources().getColor(R.color.theme_dark));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         try {
             NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment_activity_main);
             BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -74,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
                  try {
                      fm.beginTransaction().add(R.id.nav_host_fragment_activity_main, fragment3, "3").hide(fragment3).commit();
+                     fm.beginTransaction().add(R.id.nav_host_fragment_activity_main, fragment4, "4").hide(fragment4).commit();
+                     fm.beginTransaction().add(R.id.nav_host_fragment_activity_main, fragment5, "5").hide(fragment5).commit();
 
                      fm.beginTransaction().add(R.id.nav_host_fragment_activity_main, fragment2, "2").hide(fragment2).commit();
                      fm.beginTransaction().add(R.id.nav_host_fragment_activity_main, fragment1, "1").commit();
@@ -90,18 +107,29 @@ public class MainActivity extends AppCompatActivity {
                                     active = fragment1;
                                     return true;
                                 }
-                                case (R.id.navigation_dashboard): {
+                                case (R.id.navigation_covid): {
                                     fm.beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                                     fm.beginTransaction().hide(active).show(fragment2).commit();
                                     active = fragment2;
 
                                     return true;
                                 }
-                                case (R.id.navigation_notifications): {
+                                case (R.id.navigation_stock): {
                                     fm.beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
                                     fm.beginTransaction().hide(active).show(fragment3).commit();
                                     active = fragment3;
+                                    return true;
+                                }
+                                case (R.id.navigation_crypto): {
+                                    fm.beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                                    fm.beginTransaction().hide(active).show(fragment4).commit();
+                                    active = fragment4;
+                                    return true;
+                                }  case (R.id.navigation_analysis): {
+                                    fm.beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                                    fm.beginTransaction().hide(active).show(fragment5).commit();
+                                    active = fragment5;
                                     return true;
                                 }
 

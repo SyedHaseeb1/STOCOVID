@@ -45,6 +45,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation 'com.android.volley:volley:1.2.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:'
     implementation "com.jjoe64:graphview:4.2.2"
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
