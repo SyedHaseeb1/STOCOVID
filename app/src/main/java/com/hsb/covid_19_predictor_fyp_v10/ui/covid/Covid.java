@@ -1,4 +1,4 @@
-package com.hsb.covid_19_predictor_fyp_v10.ui.dashboard;
+package com.hsb.covid_19_predictor_fyp_v10.ui.covid;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.hsb.covid_19_predictor_fyp_v10.R;
 import com.hsb.covid_19_predictor_fyp_v10.Stock_Market_WebPage;
-import com.hsb.covid_19_predictor_fyp_v10.databinding.FragmentDashboardBinding;
+import com.hsb.covid_19_predictor_fyp_v10.databinding.FragmentCovidBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +38,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Struct;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -62,13 +60,13 @@ import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.view.LineChartView;
 
-public class DashboardFragment extends Fragment {
+public class Covid extends Fragment {
     String from_this_to_this;
     int[] yAxisData;
-    private DashboardViewModel dashboardViewModel;
-    private FragmentDashboardBinding binding;
+    private CovidViewModel dashboardViewModel;
+    private FragmentCovidBinding binding;
     //TextView countrytxt;
-    LineChartView cases_graph;
+    LineChartView cases_graph, prediction_graph;
     List<String> cases_array;
     String countryname = "Pakistan";
     String date = "2021-11-18T00:00:00Z";
@@ -108,25 +106,14 @@ public class DashboardFragment extends Fragment {
     List yAxisValues;
     List yAxisValues2;
     List axisValues;
+    List axisValues2;
     TextView weekly_date, today_datetxt;
     TextView weekly_date_stock, today_datetxt_stock;
     ProgressBar covid_pbr, stock_pbr;
     json_data_date_wise js_covid;
     String Global_Cases_Link = "https://corona.lmao.ninja/v2/historical/all";
     //Stock
-    LineChartView stock_graph;
-    List<String> stock_list_open;
-    List<String> stock_list_close;
-    List yAxisValues_stock;
-    List yAxisValues2_stock;
-    List axisValues_stock;
-    int[] yAxisData_stock;
-    String Stock_Link = "http://api.marketstack.com/v1/eod?access_key=38aa62e0cb3db5a9179b8a48bf79e40b&symbols=AAPL&date_from=";
-    String Stock_Link_New = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=psx&apikey=TYV31X78NKKL4LTDa";
-    String Stock_Link_New_1 = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=";
-    String Stock_Link_New_2 = "baba";
-    String Stock_Link_New_3 = "&apikey=TYV31X78NKKL4LTDa";
-    TextView stock_txt;
+
     boolean mycovidalgo = false;
 
 
@@ -157,11 +144,12 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+                new ViewModelProvider(this).get(CovidViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentCovidBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         cases_graph = root.findViewById(R.id.chart);
+        prediction_graph = root.findViewById(R.id.covid_prediction_graph);
         weekly_date = root.findViewById(R.id.week_date);
         today_datetxt = root.findViewById(R.id.today_date);
 
@@ -175,11 +163,10 @@ public class DashboardFragment extends Fragment {
         }
         weekly_date_stock = root.findViewById(R.id.week_date_stock);
         today_datetxt_stock = root.findViewById(R.id.today_date_stock);
-        stock_txt = root.findViewById(R.id.stock_txt);
 
         covid_pbr = root.findViewById(R.id.covid_pbr);
         stock_pbr = root.findViewById(R.id.stock_pbr);
-        New_Global_Caes_API new_global_caes_api=new New_Global_Caes_API();
+        New_Global_Caes_API new_global_caes_api = new New_Global_Caes_API();
         cases_array = new ArrayList<>();
         yAxisData = new int[]{7, 6, 5, 4, 3, 2, 1, 0};
         //countrytxt = root.findViewById(R.id.countrytxt);
@@ -192,6 +179,7 @@ public class DashboardFragment extends Fragment {
         String _7days = df.format(_7daysD);
         // Log.e("date", _7days + "");
         axisValues = new ArrayList();
+        axisValues2 = new ArrayList();
         yAxisValues = new ArrayList();
         yAxisValues2 = new ArrayList();
         try {
@@ -245,7 +233,7 @@ public class DashboardFragment extends Fragment {
                             today_date + "";
 
                     if (countryname.equals("Global")) {
-                         new New_Global_Caes_API().execute();
+                        new New_Global_Caes_API().execute();
                     } else {
 
                         v = 0;
@@ -259,7 +247,7 @@ public class DashboardFragment extends Fragment {
 //                            Collections.reverse(temp2);
 
 
-                              //  temp2.add(final_predicted + "");
+                //  temp2.add(final_predicted + "");
             }
 
             @Override
@@ -273,55 +261,8 @@ public class DashboardFragment extends Fragment {
 
 
         /**Stock Data Graph*/
-
-
-        stock_graph = root.findViewById(R.id.chart_stock);
-        axisValues_stock = new ArrayList();
-        yAxisValues_stock = new ArrayList();
-        yAxisValues2_stock = new ArrayList();
-        stock_list_open = new ArrayList();
-        stock_list_close = new ArrayList();
-
-        Stock_bg_process stock_bg_process = new Stock_bg_process();
-        Stock_Today();
-        stock_bg_process.execute();
-
-        stock_graph.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int a = 0;
-                a++;
-            }
-        });
-        final int[] lable_reset = {0};
-        stock_graph.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                //Open_Stcok_Web();
-                try {
-                    lable_reset[0]++;
-
-                    if (lable_reset[0] == 1) {
-                        stock_bg_process.show_line_label();
-                    } else {
-                        lable_reset[0] = 0;
-                        stock_bg_process.remove_line_label();
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return false;
-            }
-        });
-
-
+        //Moved to Different Page
         /**Stock Data Graph*/
-        yAxisData_stock = new int[]{7, 6, 5, 4, 3, 2, 1, 0};
-        // stock_bg_process.execute();
-
-        // int a2=Linear_Regression_ALlo(8,21);
-        // Log.e("Linear_Algo","Linear Regression: \n Day 7: "+Linear_Regression_ALlo(7,21));
 
         return root;
     }
@@ -332,12 +273,15 @@ public class DashboardFragment extends Fragment {
         Line line, line2;
 
 
-
         @Override
         protected void onPreExecute() {
             cases_array.clear();
             dates.clear();
             temp.clear();
+            axisValues.clear();
+            axisValues2.clear();
+            yAxisValues.clear();
+            yAxisValues2.clear();
             super.onPreExecute();
         }
 
@@ -380,28 +324,23 @@ public class DashboardFragment extends Fragment {
 
 
                         }
-                        String [] spilt1=date_in_db.split("/");
-                        String [] spilt2=spilt1[1].split("/");
-                        String month=spilt1[0];
-                        String day=spilt2[0];
-                        if (day.length()<2){
-                            day="0"+day;
+                        String[] spilt1 = date_in_db.split("/");
+                        String[] spilt2 = spilt1[1].split("/");
+                        String month = spilt1[0];
+                        String day = spilt2[0];
+                        if (day.length() < 2) {
+                            day = "0" + day;
                         }
-                        if (month.length()<2){
-                            month="0"+month;
+                        if (month.length() < 2) {
+                            month = "0" + month;
                         }
-                        Log.e("N_C date", "2022-"+ month+"-"+day+""+"\t"+map.get(date_in_db) + "");
+                        Log.e("N_C date", "2022-" + month + "-" + day + "" + "\t" + map.get(date_in_db) + "");
                         cases_array.add(map.get(date_in_db) + "");
-                        dates.add("2022-"+ month+"-"+day+"");
+                        dates.add("2022-" + month + "-" + day + "");
 
 
                     }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
 
-                        }
-                    });
                 } catch (JSONException e) {
                     Log.e("N_C err1", e.getLocalizedMessage() + "");
 
@@ -439,6 +378,7 @@ public class DashboardFragment extends Fragment {
                     String datess = dates.get(7).toString().replace("T00:00:00Z", "");
 
 
+
                     String[] axisData = {
                             dates.get(1).toString().replace("2022-01-", "").replace("T00:00:00Z", "")
                                     .replace("2022-02-", ""),
@@ -454,44 +394,34 @@ public class DashboardFragment extends Fragment {
                                     .replace("2022-02-", ""),
                             dates.get(7).toString().replace("2022-01-", "").replace("T00:00:00Z", "")
                                     .replace("2022-02-", ""),
-
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-
-
-//                            "2",
-//                            "3",
-//                            "4",
-//                            "5",
-//                            "6",
-//                            "7",
-
-//                            "8",
-//                            "9",
-//                            "10",
-//                            "11",
-//                            "12",
-//                            "13",
-//                            "14"
                     };
+                    String[] axisData2 = {
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
 
+                    };
                     d = 0;
                     try {
+                        for (int i = 0; i < axisData2.length; i++) {
+                            axisValues2.add(i, new AxisValue(i).setLabel(axisData2[i]));
+
+                        }
                         for (int i = 0; i < axisData.length; i++) {
                             axisValues.add(i, new AxisValue(i).setLabel(axisData[i]));
                         }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -537,11 +467,12 @@ public class DashboardFragment extends Fragment {
                 lines.add(line);
 
                 //Future Data
-                lines.add(line2);
+                lines2.add(line2);
 
                 //lines2.add(line2);//For Prediction
 
                 data.setLines(lines);
+                data2.setLines(lines2);
 
                 //Future Prediction
                 // data2.setLines(lines2);
@@ -661,7 +592,7 @@ public class DashboardFragment extends Fragment {
                         }
 
                         for (int bb = 0; bb < temp2.size(); bb++) {
-                            yAxisValues2.add(new PointValue(bb + 7.0f, Integer.parseInt(temp2.get(bb) + "")));
+                            yAxisValues2.add(new PointValue(bb, Integer.parseInt(temp2.get(bb) + "")));
                             // Log.e("temp", yAxisValues2 + "");
                         }
 
@@ -704,11 +635,15 @@ public class DashboardFragment extends Fragment {
                 }
 
                 cases_graph.setLineChartData(data);
+                prediction_graph.setLineChartData(data2);
 //            cases_graph.setLineChartData(data2);
 
                 Axis axis = new Axis();
+                Axis axis2 = new Axis();
                 axis.setValues(axisValues);
+                axis2.setValues(axisValues2);
                 axis.setMaxLabelChars(1);
+                axis2.setMaxLabelChars(1);
                 Axis yAxis = new Axis();
                 //yAxis.setValues(yAxisValues);
                 data.setAxisYLeft(yAxis.setAutoGenerated(false));
@@ -718,7 +653,7 @@ public class DashboardFragment extends Fragment {
                 //Future Data
 
                 data2.setAxisYLeft(yAxis.setAutoGenerated(false));
-                data2.setAxisXBottom(axis);
+                data2.setAxisXBottom(axis2);
                 data2.setValueLabelTextSize(10);
                 try {
                     line.setHasLabels(true);
@@ -800,6 +735,7 @@ public class DashboardFragment extends Fragment {
 //            }
             super.onPostExecute(s);
         }
+
         public void Show_line_label_cases() {
             line.setHasLines(true);
             line2.setHasLines(true);
@@ -808,366 +744,6 @@ public class DashboardFragment extends Fragment {
         public void Remove_line_label_cases() {
             line.setHasLines(false);
             line2.setHasLines(false);
-        }
-    }
-
-
-    /**
-     * Stock Data Graph
-     */
-    public void Open_Stcok_Web() {
-        Intent intent = new Intent(getContext(), Stock_Market_WebPage.class);
-        startActivity(intent);
-    }
-
-    LineChartData data_stock = new LineChartData();
-
-    LineChartData data_stock2 = new LineChartData();
-
-    public void Stock_Today() {
-        Date c = Calendar.getInstance().getTime();
-        //Date today = new Date(c.getTime());
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String today_date = df.format(c);
-        Stock_date = today_date;
-    }
-
-    public void Stock_Yesterday() {
-        Date c = Calendar.getInstance().getTime();
-        //7 means 6 days
-        Date yesterday = new Date(c.getTime() - 86400000L);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String yesterday_date = df.format(yesterday);
-        Stock_date = yesterday_date;
-    }
-
-    Date c = Calendar.getInstance().getTime();
-
-    public String Stock_Week(long time) {
-        Date today_date = new Date(c.getTime() - time);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String weekly_dates = df.format(today_date);
-        Log.e("S_date", weekly_dates + "");
-        return weekly_dates;
-    }
-
-    int limit_Stock_bg = 0;
-    int limit_run = 0;
-    List Stock_dates, Stock_dates2;
-
-    class Stock_bg_process extends AsyncTask<Void, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            stock_list_open.clear();
-            stock_list_close.clear();
-            yAxisValues_stock.clear();
-            yAxisValues2_stock.clear();
-            axisValues_stock.clear();
-            Stock_dates = new ArrayList();
-            Stock_dates2 = new ArrayList();
-            stock_pbr.setVisibility(View.VISIBLE);
-            Stock_dates.clear();
-            Stock_dates2.clear();
-
-
-            super.onPreExecute();
-        }
-
-        Line line, line2;
-
-        public void show_line_label() {
-            line.setHasLabels(true);
-
-            line2.setHasLabels(true);
-
-        }
-
-        public void remove_line_label() {
-            line.setHasLabels(false);
-
-            line2.setHasLabels(false);
-
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        protected void onPostExecute(String s) {
-            stock_pbr.setVisibility(View.GONE);
-
-            //Collections.reverse(stock_list);
-            //Collections.reverse(stock_list2);
-
-            line = new Line(yAxisValues_stock); //Close
-            line2 = new Line(yAxisValues2_stock); //Open
-
-            try {
-//                String[] axisData = {
-//                        "1",
-//                        "2",
-//                        "3",
-//                        "4",
-//                        "5",
-//                        "6",
-//                        "7",
-//
-//                        "8",
-//                        "9",
-//                        "10",
-//                        "11",
-//                        "12",
-//                        "13",
-//                        "14"
-//                };
-                Collections.reverse(Stock_dates);
-                Collections.reverse(stock_list_open);
-                Collections.reverse(stock_list_close);
-                String[] axisData = {
-                        Stock_dates.get(0) + "",
-                        Stock_dates.get(1) + "",
-                        Stock_dates.get(2) + "",
-                        Stock_dates.get(3) + "",
-                        Stock_dates.get(4) + "",
-                        Stock_dates.get(5) + "",
-                        Stock_dates.get(6) + "",
-                };
-
-
-                //stock_list.add(i + "");
-
-                //Collections.reverse(stock_list2);
-
-//                stock_list.add("200");
-//                stock_list.add("188");
-//                stock_list.add("120");
-//                stock_list.add("102");
-//                stock_list.add("88");
-//                stock_list.add("109");
-//                stock_list.add("186");
-
-                ArrayList<Integer> stock_int = new ArrayList<Integer>();
-                stock_int.add(200);
-                stock_int.add(100);
-                stock_int.add(90);
-                stock_int.add(220);
-                stock_int.add(110);
-                stock_int.add(10);
-                int stock_min = Integer.MAX_VALUE;
-                for (int i = 0; i < 6; i++) {
-                    if (stock_int.get(i) < stock_min) {
-                        stock_min = stock_int.get(i);
-                    }
-                }
-                int stock_max = Integer.MIN_VALUE;
-                for (int i = 0; i < 6; i++) {
-                    if (stock_int.get(i) > stock_max) {
-                        stock_max = stock_int.get(i);
-                    }
-                }
-                //Log.e("Stock min", stock_min + "\n" + stock_max);
-
-                final int min = stock_min;
-                final int max = stock_max;
-                final int random = new Random().nextInt((max - min) + 1) + min;
-                int x = 0;
-                int y = 0;
-//                int average_stock = Average_Per_Day(
-//                        Integer.parseInt(stock_list.get(0)),
-//                        Integer.parseInt(stock_list.get(1)),
-//                        Integer.parseInt(stock_list.get(2)),
-//                        Integer.parseInt(stock_list.get(3)),
-//                        Integer.parseInt(stock_list.get(4)),
-//                        Integer.parseInt(stock_list.get(5)),
-//                        Integer.parseInt(stock_list.get(6))
-//                        );
-//                int final_predicted = 0;
-//
-//                for (int i = 0; i < 6; i++) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                        x=Integer.parseInt(stock_list.get(i));
-//                        y = 2 * x;
-//                        final_predicted = y - average_stock;
-//                        stock_list2.add(final_predicted + "");
-//                       // Log.e("Stock arrary", average_stock + "");
-//                    }
-//                }
-                // Collections.rotate(stock_list2,4);
-
-
-                try {
-                    for (int i = 0; i < axisData.length; i++) {
-                        axisValues_stock.add(i, new AxisValue(i).setLabel(axisData[i]));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                for (int i = 0; i < stock_list_close.size(); i++) {
-                    yAxisValues_stock.add(new PointValue(i, Float.parseFloat(stock_list_close.get(i).trim() + "")));
-                    //yAxisValues2_stock.add(new PointValue(i, Integer.parseInt(stock_list2.get(i).trim())));
-
-                }
-                for (int i = 0; i > stock_list_close.size(); i++) {
-//                    yAxisValues2_stock.add(new PointValue(i + 7.0f, Float.parseFloat(stock_list2.get(i).trim())));
-                    yAxisValues2_stock.add(new PointValue(i, Float.parseFloat(stock_list_open.get(i).trim())));
-
-
-                }
-                //  Log.e("stock", stock_list2.size() + "");
-                yAxisValues2_stock.clear();
-                //Future graph data
-                for (int bb = 0; bb < stock_list_open.size(); bb++) {
-//                    yAxisValues2_stock.add(new PointValue(bb + 7.0f, Float.parseFloat(stock_list2.get(bb))));
-                    yAxisValues2_stock.add(new PointValue(bb, Float.parseFloat(stock_list_open.get(bb))));
-                    //Log.e("temp", yAxisValues2 + "");
-                }
-
-
-                List lines = new ArrayList<String>();
-                List lines2 = new ArrayList<String>();
-                lines.add(line);
-                lines.add(line2);
-                data_stock.setLines(lines);
-                //   data_stock.setLines(lines2);
-
-                stock_graph.setLineChartData(data_stock);
-
-                Axis axis = new Axis();
-                axis.setValues(axisValues_stock);
-                axis.setMaxLabelChars(2);
-                Axis yAxis = new Axis();
-                //yAxis.setValues(yAxisValues);
-                data_stock.setAxisYLeft(yAxis.setAutoGenerated(false));
-                data_stock.setAxisXBottom(axis);
-                data_stock.setValueLabelTextSize(10);
-                LineChartValueFormatter formatter = new SimpleLineChartValueFormatter(1);
-                line.setFormatter(formatter);
-                // line.setHasLabels(true);
-                line.setHasLines(true);
-                line.setFilled(true);
-                line.setHasPoints(true);
-                line.setPointColor(getContext().getResources().getColor(R.color.blue));
-                line.setStrokeWidth(2);
-                line.setPointRadius(5);
-                line.setColor(getResources().getColor(R.color.blue2));
-
-
-                line2.setFormatter(formatter);
-                // line2.setHasLabels(true);
-                line2.setHasLines(true);
-                line2.setFilled(true);
-                line2.setHasPoints(true);
-                line2.setPointColor(getContext().getResources().getColor(R.color.red));
-                line2.setColor(getResources().getColor(R.color.redish));
-
-                line2.setStrokeWidth(2);
-                line2.setPointRadius(5);
-
-
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-            super.onPostExecute(s);
-        }
-
-        int a = 0, k = 0;
-
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            String dummy = "";
-            if (limit_run < 1) {
-                try {
-                    URL url = new URL(Stock_Link_New);
-                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"), 8);
-                    StringBuilder sb = new StringBuilder();
-
-                    String line = null;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line + "\n");
-                    }
-                    String result = sb.toString();
-                    JSONObject array;
-                    try {
-                        array = new JSONObject(result);
-                        JSONObject object;
-                        JSONObject object1 = array.getJSONObject("Time Series (Daily)");
-                        JSONArray arr = object1.names();
-
-
-                        for (int i = 0; i < 7; i++) {
-                            String date_in_db = arr.getString(arr.length() - 100 + i) + "";
-                            Stock_dates.add(date_in_db.substring(8, 10));
-                            Stock_dates2.add(date_in_db);
-                            JSONObject object2 = object1.getJSONObject(date_in_db);
-                            Map<String, String> map = null;
-                            for (int j = 0; j < object2.length(); j++) {
-                                map = new HashMap<String, String>();
-                                Iterator<?> iter = object2.keys();
-                                while (iter.hasNext()) {
-                                    String key = (String) iter.next();
-                                    String value = object2.getString(key);
-                                    map.put(key, value);
-
-                                }
-
-
-                                a++;
-
-
-                                //stock_list2.add(map.get("close").trim() + "");
-
-
-                                // Log.e("Date " + count, yAxisData[count] + "");
-                            }
-                            stock_list_close.add(Float.parseFloat(map.get("4. close").trim()) + "");
-                            stock_list_open.add(Float.parseFloat(map.get("1. open").trim()) + "");
-
-                            Log.e("S data", "Date: " + date_in_db + "\t" + map.get("4. close") + "\t" + map.get("1. open"));
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Collections.reverse(Stock_dates2);
-                                weekly_date_stock.setText(Stock_dates2.get(0) + "");
-                                today_datetxt_stock.setText(Stock_dates2.get(6) + "");
-                                stock_txt.setText("Stock Market " + Stock_Link_New_2.toUpperCase() + " (USD)");
-                            }
-                        });
-                    } catch (JSONException e) {
-                        Log.e("S err1", e.getLocalizedMessage() + "");
-
-                        //No Data Exception
-                        //Recalling with new Date day-1
-
-                        Stock_Yesterday();
-
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (limit_Stock_bg < 1) {
-                                    limit_run = 0;
-                                    new Stock_bg_process().execute();
-                                }
-                                limit_Stock_bg++;
-                            }
-
-                        });
-
-
-                        e.printStackTrace();
-                    }
-
-                } catch (Exception e) {
-                    Log.e("S err2", e.getLocalizedMessage() + "");
-                }
-
-            }
-            limit_run++;
-            return dummy;
         }
     }
 
@@ -1242,6 +818,7 @@ public class DashboardFragment extends Fragment {
             yAxisValues.clear();
             yAxisValues2.clear();
             axisValues.clear();
+            axisValues2.clear();
             covid_pbr.setVisibility(View.VISIBLE);
             js_covid = new json_data_date_wise();
             temp = new ArrayList();
@@ -1271,6 +848,23 @@ public class DashboardFragment extends Fragment {
                     String datess = dates.get(7).toString().replace("T00:00:00Z", "");
 
 
+                    String[] axisData2 = {
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
+                                    .replace("2022-02-", ""),
+
+                    };
                     String[] axisData = {
                             dates.get(1).toString().replace("2022-01-", "").replace("T00:00:00Z", "")
                                     .replace("2022-02-", ""),
@@ -1287,42 +881,14 @@ public class DashboardFragment extends Fragment {
                             dates.get(7).toString().replace("2022-01-", "").replace("T00:00:00Z", "")
                                     .replace("2022-02-", ""),
 
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
-                            new DateIncrementer().addOneDay(datess + "").replace("2022-01-", "")
-                                    .replace("2022-02-", ""),
 
-
-//                            "2",
-//                            "3",
-//                            "4",
-//                            "5",
-//                            "6",
-//                            "7",
-
-//                            "8",
-//                            "9",
-//                            "10",
-//                            "11",
-//                            "12",
-//                            "13",
-//                            "14"
                     };
 
                     d = 0;
                     try {
                         for (int i = 0; i < axisData.length; i++) {
                             axisValues.add(i, new AxisValue(i).setLabel(axisData[i]));
+                            axisValues2.add(i, new AxisValue(i).setLabel(axisData2[i]));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1373,11 +939,13 @@ public class DashboardFragment extends Fragment {
                 lines.add(line);
 
                 //Future Data
-                lines.add(line2);
+                lines2.add(line2);
 
                 //lines2.add(line2);//For Prediction
 
                 data.setLines(lines);
+                data2.setLines(lines2);
+
 
                 //Future Prediction
                 // data2.setLines(lines2);
@@ -1497,7 +1065,7 @@ public class DashboardFragment extends Fragment {
                         }
 
                         for (int bb = 0; bb < temp2.size(); bb++) {
-                            yAxisValues2.add(new PointValue(bb + 7.0f, Integer.parseInt(temp2.get(bb) + "")));
+                            yAxisValues2.add(new PointValue(bb, Integer.parseInt(temp2.get(bb) + "")));
                             // Log.e("temp", yAxisValues2 + "");
                         }
 
@@ -1540,11 +1108,14 @@ public class DashboardFragment extends Fragment {
                 }
 
                 cases_graph.setLineChartData(data);
-//            cases_graph.setLineChartData(data2);
+                prediction_graph.setLineChartData(data2);
 
                 Axis axis = new Axis();
+                Axis axis2 = new Axis();
                 axis.setValues(axisValues);
+                axis2.setValues(axisValues2);
                 axis.setMaxLabelChars(1);
+                axis2.setMaxLabelChars(1);
                 Axis yAxis = new Axis();
                 //yAxis.setValues(yAxisValues);
                 data.setAxisYLeft(yAxis.setAutoGenerated(false));
@@ -1554,7 +1125,7 @@ public class DashboardFragment extends Fragment {
                 //Future Data
 
                 data2.setAxisYLeft(yAxis.setAutoGenerated(false));
-                data2.setAxisXBottom(axis);
+                data2.setAxisXBottom(axis2);
                 data2.setValueLabelTextSize(10);
                 try {
                     line.setHasLabels(true);

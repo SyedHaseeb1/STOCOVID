@@ -1,20 +1,15 @@
 package com.hsb.covid_19_predictor_fyp_v10.ui.home;
 
-import static android.content.Context.LOCATION_SERVICE;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.DatabaseErrorHandler;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -27,10 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.textclassifier.ConversationActions;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,23 +39,17 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.android.volley.Response;
 import com.hsb.covid_19_predictor_fyp_v10.R;
 import com.hsb.covid_19_predictor_fyp_v10.SettingsActivity;
 import com.hsb.covid_19_predictor_fyp_v10.databinding.FragmentHomeBinding;
-import com.hsb.covid_19_predictor_fyp_v10.ui.dashboard.DashboardFragment;
-import com.hsb.covid_19_predictor_fyp_v10.ui.notifications.NotificationsFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xml.sax.ext.DeclHandler;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -72,12 +59,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -819,6 +803,9 @@ public class HomeFragment extends Fragment {
                             totalcurrent_txt.setText(TotalActive);
                             critical_txt.setText(TotalCritical);
                             population_txt.setText(Population);
+                            if (Population.length()>8){
+                                population_txt.setTextSize(13f);
+                            }
 
                             datetxt.setText("As of " + Date.replace("/","-"));
 

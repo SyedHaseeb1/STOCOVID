@@ -12,14 +12,25 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.hsb.covid_19_predictor_fyp_v10.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_covid"
+        android:name="com.hsb.covid_19_predictor_fyp_v10.ui.covid.Covid"
+        android:label="Covid"
+        tools:layout="@layout/fragment_covid" />
+    <fragment
+        android:id="@+id/navigation_crypto"
+        android:name="com.hsb.covid_19_predictor_fyp_v10.ui.crypto.Crypto"
+        android:label="Crypto"
+        tools:layout="@layout/fragment_crypto" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.hsb.covid_19_predictor_fyp_v10.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_stock"
+        android:name="com.hsb.covid_19_predictor_fyp_v10.ui.stock.StockFragment"
+        android:label="Stock"
+        tools:layout="@layout/fragment_stock" />
+
+    <fragment
+        android:id="@+id/navigation_analysis"
+        android:name="com.hsb.covid_19_predictor_fyp_v10.ui.analysis.Analysis"
+        android:label="Analysis"
+        tools:layout="@layout/fragment_analysis" />
 </navigation>

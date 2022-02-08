@@ -3,17 +3,31 @@
 
     <item
         android:id="@+id/navigation_home"
+        android:iconTint="@color/theme_blue"
         android:icon="@drawable/homeicon"
-        android:title="" />
+        android:title="Home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/grapghicon"
-        android:title="" />
+        android:id="@+id/navigation_covid"
+        android:icon="@drawable/corona_icon_fill"
+        android:title="Covid" />
+    <item
+        android:id="@+id/navigation_stock"
+        android:icon="@drawable/stock_icon_fill"
+        android:title="Stock" />
+    <item
+        android:id="@+id/navigation_crypto"
+        android:icon="@drawable/crypto_icon_fill"
+        android:title="Crypto" />
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_notifications"-->
+<!--        android:icon="@drawable/ic_notifications_black_24dp"-->
+<!--        android:title="" />-->
 
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="" />
+        android:id="@+id/navigation_analysis"
+        android:icon="@drawable/analysis_icon"
+        android:title="Analysis" />
 
 </menu>
