@@ -818,7 +818,7 @@ public class HomeFragment extends Fragment {
                             today_recovered_num.setText(TodayRecovered);
                             totalcurrent_txt.setText(TotalActive);
                             critical_txt.setText(TotalCritical);
-                            population_txt.setText(Population);
+                            population_txt.setText(Population+"");
 
                             datetxt.setText("As of " + Date.replace("/","-"));
 
