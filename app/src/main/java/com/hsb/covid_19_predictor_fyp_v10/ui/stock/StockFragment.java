@@ -248,7 +248,7 @@ public class StockFragment extends Fragment {
         covid_cases = new ArrayList();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         for (int i = 0; i < 7; i++) {
-            String a = preferences.getString("day" + i, "2");
+            String a = preferences.getString("day" + i, "0");
             covid_cases.add(a + "");
         }
         if (!covid_cases.get(0).toString().equals("0")) {
