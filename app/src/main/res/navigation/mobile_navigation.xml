@@ -18,7 +18,7 @@
         tools:layout="@layout/fragment_covid" />
     <fragment
         android:id="@+id/navigation_crypto"
-        android:name="com.hsb.covid_19_predictor_fyp_v10.ui.crypto.Crypto"
+        android:name="com.hsb.covid_19_predictor_fyp_v10.ui.cryptos.Crypto"
         android:label="Crypto"
         tools:layout="@layout/fragment_crypto" />
 

@@ -25,9 +25,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hsb.covid_19_predictor_fyp_v10.databinding.ActivityMainBinding;
 import com.hsb.covid_19_predictor_fyp_v10.ui.analysis.Analysis;
 import com.hsb.covid_19_predictor_fyp_v10.ui.covid.Covid;
-import com.hsb.covid_19_predictor_fyp_v10.ui.crypto.Crypto;
+import com.hsb.covid_19_predictor_fyp_v10.ui.cryptos.Crypto;
 import com.hsb.covid_19_predictor_fyp_v10.ui.home.HomeFragment;
-import com.hsb.covid_19_predictor_fyp_v10.ui.notifications.NotificationsFragment;
 import com.hsb.covid_19_predictor_fyp_v10.ui.stock.StockFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,12 +45,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activity=this;
 
-        load();
+
+            load();
+
+
+
     }
 
     public void load(){
         FragmentManager fm = activity.getSupportFragmentManager();
-
         if (checkLocationPermission()){
 
             binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -103,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
                         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                             switch (item.getItemId()) {
                                 case (R.id.navigation_home): {
-                                    fm.beginTransaction().hide(active).show(fragment1).commit();
+                                    fm.beginTransaction().hide(active).show(fragment1)
+                                            .commit();
                                     active = fragment1;
                                     return true;
                                 }
@@ -140,12 +143,13 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                 }
-            }, 1500);
+            }, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         }
+
 
     }
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;

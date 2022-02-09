@@ -525,7 +525,7 @@
                             android:layout_marginStart="5dp"
                             android:layout_weight="1"
                             android:background="@drawable/purple_bg"
-                            android:padding="10dp">
+                            android:paddingVertical="10dp">
 
                             <TextView
                                 android:id="@+id/population"

@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.hsb.covid_19_predictor_fyp_v10.R;
 import com.hsb.covid_19_predictor_fyp_v10.Stock_Market_WebPage;
 import com.hsb.covid_19_predictor_fyp_v10.databinding.FragmentCovidBinding;
+import com.hsb.covid_19_predictor_fyp_v10.ui.stock.StockFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -113,9 +114,10 @@ public class Covid extends Fragment {
     json_data_date_wise js_covid;
     String Global_Cases_Link = "https://corona.lmao.ninja/v2/historical/all";
     //Stock
-
+    SharedPreferences preferences;
     boolean mycovidalgo = false;
 
+    StockFragment stockFragment;
 
     @Override
     public void onResume() {
@@ -135,7 +137,17 @@ public class Covid extends Fragment {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("Country", "Pakistan");
+        editor.putString("day0", "0");
+        editor.putString("day1", "0");
+        editor.putString("day2", "0");
+        editor.putString("day3", "0");
+        editor.putString("day4", "0");
+        editor.putString("day5", "0");
+        editor.putString("day6", "0");
+
         editor.apply();
+        Log.e("Dist",preferences.getString("day1","1")+"");
+
         binding = null;
     }
 
@@ -173,6 +185,7 @@ public class Covid extends Fragment {
         Date c = Calendar.getInstance().getTime();
 //        Date _7daysD = new Date(c.getTime() - 604800000L);
         Date _7daysD = new Date(c.getTime() - 691200000L);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String today_date = df.format(c);
@@ -257,11 +270,9 @@ public class Covid extends Fragment {
         });
 
 
-        //Sentimental Analysis Graph
-
-
         /**Stock Data Graph*/
         //Moved to Different Page
+        stockFragment = new StockFragment();
         /**Stock Data Graph*/
 
         return root;
@@ -378,7 +389,6 @@ public class Covid extends Fragment {
                     String datess = dates.get(7).toString().replace("T00:00:00Z", "");
 
 
-
                     String[] axisData = {
                             dates.get(1).toString().replace("2022-01-", "").replace("T00:00:00Z", "")
                                     .replace("2022-02-", ""),
@@ -461,6 +471,10 @@ public class Covid extends Fragment {
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
+
+
+
+
                 List lines = new ArrayList<String>();
                 List lines2 = new ArrayList<String>();
 
@@ -552,6 +566,21 @@ public class Covid extends Fragment {
                         temp.add(f + "");//6
                         temp.add(g + "");//7
 
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                                SharedPreferences.Editor editor = preferences.edit();
+                                for (int i = 0; i < 7; i++) {
+                                    editor.putString("day" + i, temp.get(i)+"");
+                                    editor.apply();
+                                }
+                                Log.e("COVID_ARRAY", temp + "");
+                                stockFragment.Stock_Covid_Cases(Covid.this.getContext());
+
+                            }
+                        });
 
                         yAxisValues.clear();
                         for (int aa = 0; aa < temp.size(); aa++) {
@@ -728,11 +757,9 @@ public class Covid extends Fragment {
 
 
             }
+
             covid_pbr.setVisibility(View.GONE);
-//            for (int i = 8; i < 15; i++) {
-//                Linear_Regression_ALlo(i, "Day " + i);
-//
-//            }
+
             super.onPostExecute(s);
         }
 

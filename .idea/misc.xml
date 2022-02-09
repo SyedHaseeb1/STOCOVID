@@ -6,7 +6,7 @@
         <entry key="app/src/main/res/drawable/grayeshbg.xml" value="0.22314814814814815" />
         <entry key="app/src/main/res/drawable/square_round_gray.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.21927083333333333" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_stock_market_web_page.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/layout/custom_list.xml" value="0.22291666666666668" />
         <entry key="app/src/main/res/layout/fragment_analysis.xml" value="0.32890625" />
@@ -15,7 +15,7 @@
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_stock.xml" value="0.32890625" />
+        <entry key="app/src/main/res/layout/fragment_stock.xml" value="0.33" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.32890625" />
       </map>
     </option>

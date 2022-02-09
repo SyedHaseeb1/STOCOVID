@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -37,12 +39,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.hsb.covid_19_predictor_fyp_v10.MainActivity;
 import com.hsb.covid_19_predictor_fyp_v10.R;
 import com.hsb.covid_19_predictor_fyp_v10.SettingsActivity;
 import com.hsb.covid_19_predictor_fyp_v10.databinding.FragmentHomeBinding;
@@ -132,8 +136,59 @@ public class HomeFragment extends Fragment {
     String New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/";
     String New_Api_Link_Global_Yesterday1 = "https://corona.lmao.ninja/v2/countries/";
     //    String New_Api_Link_Global = "https://corona.lmao.ninja/v2/all?";
-    TextView positivity_ratio_txt,population_txt;
+    TextView positivity_ratio_txt, population_txt;
+    GetLocation getLocation;
 
+    @Override
+    public void onResume() {
+//        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+//        boolean gps_enabled = false;
+//        boolean network_enabled = false;
+//        Context context = getContext();
+//
+//        try {
+//
+//            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//        } catch (Exception ex) {
+//        }
+//
+//        try {
+//            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//        } catch (Exception ex) {
+//        }
+//
+//        if (!gps_enabled && !network_enabled) {
+//            // notify user
+////            new AlertDialog.Builder(context)
+////                    .setMessage("Please Turn On Location from settings")
+////                    .setPositiveButton("Open Settings", new DialogInterface.OnClickListener() {
+////                        @Override
+////                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+////                            context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+////                        }
+////                    })
+////                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+////                        @Override
+////                        public void onClick(DialogInterface dialogInterface, int i) {
+////                            Toast.makeText(context, "Location must be turned on for this app to run smoothly", Toast.LENGTH_SHORT).show();
+////                            getActivity().finishAffinity();
+////                        }
+////                    })
+////                    .show();
+//        } else {
+//            Log.e("LocationTask ", getLocation.getStatus() + "");
+//            if (getLocation.getStatus().equals("FINISHED")) {
+//                getLocation.execute();
+//
+//            }
+//            else if (getLocation.getStatus().equals("PENDING")){
+//                Intent intent=new Intent(getContext(),MainActivity.class);
+//                startActivity(intent);
+//                getActivity().finish();
+//            }
+//        }
+        super.onResume();
+    }
 
     @SuppressLint("ResourceType")
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -216,18 +271,48 @@ public class HomeFragment extends Fragment {
         //Live Location
 //        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 //        String countryCode = tm.getSimCountryIso();
-        new GetLocation().execute();
 
+        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+        Context context = getContext();
+        getLocation = new GetLocation();
+        try {
 
-        //NEW COVID API
-        //  Json_NEW_API json_new_api = new Json_NEW_API();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                json_new_api.execute();
-//            }
-//        }, 3000);
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
 
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        if (!gps_enabled && !network_enabled) {
+            // notify user
+            new AlertDialog.Builder(context)
+                    .setMessage("Please Turn On Location from settings")
+                    .setPositiveButton("Open Settings", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            paramDialogInterface.dismiss();
+                        }
+                    })
+                    .setNegativeButton("Restart", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(context, "Location must be turned on for this app to run smoothly", Toast.LENGTH_SHORT).show();
+                            getActivity().finishAffinity();
+                            dialogInterface.dismiss();
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
+        } else {
+            getLocation.execute();
+        }
 
         Animation get_visible_anim = AnimationUtils.loadAnimation(getContext(), R.anim.get_visibile_anim);
 
@@ -287,7 +372,6 @@ public class HomeFragment extends Fragment {
                             if (country_name.equals("Global")) {
                                 New_Api_Link_Global = "https://corona.lmao.ninja/v2/all?";
                                 new Json_NEW_API().execute();
-                                new Json_NEW_API_Positvity().execute();
                             } else {
                                 cc++;
                                 if (cc < 2) {
@@ -305,7 +389,6 @@ public class HomeFragment extends Fragment {
                                     New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/" + country_name + "?";
                                     //new json_data().execute();
                                     new Json_NEW_API().execute();
-                                    new Json_NEW_API_Positvity().execute();
 
 
                                 }
@@ -313,7 +396,7 @@ public class HomeFragment extends Fragment {
                                 New_Api_Link_Global = "https://corona.lmao.ninja/v2/countries/" + country_name + "?";
 
                                 new Json_NEW_API().execute();
-                                new Json_NEW_API_Positvity().execute();
+
                                 Log.e("New_Link", New_Api_Link_Global);
                                 // new json_data_country().execute();
                                 editor.putString("Country", country_name);
@@ -605,26 +688,39 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    long P_Ratio = 0;
-    long Today_Cases = 0;
+    double P_Ratio = 0;
+    double Today_tests = 0;
+    double Yesterday_tests = 0;
+    double P_Ratio_res = 0;
+    double Today_Cases = 0;
 
     //COVID NEW
-    long ratio=0;
+    double ratio = 0;
+
     class Json_NEW_API_Positvity extends AsyncTask<Void, String, String> {
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+        }
+
         @Override
         protected void onPostExecute(String s) {
 
             // new Json_NEW_API_Positvity().execute();
             try {
-                ratio = P_Ratio / Today_Cases;
-                Log.e("N_C_P", ratio + "");
+                ratio = (Today_Cases * 100) / P_Ratio_res;
+                Log.e("N_C_P :", ratio + "\n" +
+                        "P_Ratio : " + P_Ratio_res + "\n"
+                        + "Today_Cases: " + Today_Cases);
 
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         positivity_ratio_txt.setTextSize(14f);
-                        positivity_ratio_txt.setText(ratio + " %");
+                        positivity_ratio_txt.setText(getFormatedAmount_double(ratio) + " %");
+                        today_tests_txt.setText(getFormatedAmount((long) P_Ratio_res) + "");
 
                     }
                 });
@@ -679,15 +775,8 @@ public class HomeFragment extends Fragment {
                         }
 
                     }
-                    long Yesterday_Tests = Long.parseLong(map.get("tests"));
-                    P_Ratio -= Yesterday_Tests;
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            today_tests_txt.setText(getFormatedAmount(P_Ratio) + "");
-
-                        }
-                    });
+                    Yesterday_tests = Double.parseDouble(map.get("tests"));
+                    P_Ratio_res = Today_tests - Yesterday_tests;
 
 
                 } catch (JSONException e) {
@@ -710,6 +799,9 @@ public class HomeFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             try {
+                P_Ratio = 0;
+                Today_Cases = 0;
+                ratio = 0;
                 progressDialog.show();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -720,6 +812,7 @@ public class HomeFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             try {
+                new Json_NEW_API_Positvity().execute();
                 progressDialog.dismiss();
                 swipe_L.setRefreshing(false);
             } catch (Exception e) {
@@ -771,8 +864,8 @@ public class HomeFragment extends Fragment {
                     String TodayCases = getFormatedAmount(Integer.parseInt(map.get("todayCases"))) + "";
                     String TotalDeaths = getFormatedAmount(Long.parseLong(map.get("deaths"))) + "";
                     String TodayDeaths = getFormatedAmount(Integer.parseInt(map.get("todayDeaths"))) + "";
-                    P_Ratio = Long.parseLong(map.get("tests"));
-                    Today_Cases = Long.parseLong(map.get("todayCases"));
+                    Today_tests = Double.parseDouble(map.get("tests"));
+                    Today_Cases = Double.parseDouble(map.get("todayCases"));
                     String TotalRecovered = getFormatedAmount(Integer.parseInt(map.get("recovered"))) + "";
                     String TodayRecovered = getFormatedAmount(Integer.parseInt(map.get("todayRecovered"))) + "";
                     String TotalActive = getFormatedAmount(Integer.parseInt(map.get("active"))) + "";
@@ -803,19 +896,14 @@ public class HomeFragment extends Fragment {
                             totalcurrent_txt.setText(TotalActive);
                             critical_txt.setText(TotalCritical);
                             population_txt.setText(Population);
-                            if (Population.length()>8){
+                            Log.e("P_Ration: ", P_Ratio + "");
+                            if (Population.length() > 8) {
                                 population_txt.setTextSize(13f);
+                                population_txt.setPadding(0,0,0,0);
                             }
 
-                            datetxt.setText("As of " + Date.replace("/","-"));
+                            datetxt.setText("As of " + Date.replace("/", "-"));
 
-
-//                            activetxt.setText(getFormatedAmount(Integer.parseInt(activeS)) + "");
-//                            deathstxt.setText(getFormatedAmount(Integer.parseInt(deathS)) + "");
-//                            recoveredtxt.setText(getFormatedAmount(Integer.parseInt(recoverS)) + "");
-//                            affectedtxt.setText(getFormatedAmount(Integer.parseInt(newConfirmed)) + "");
-//                            serioustxt.setText(getFormatedAmount(Integer.parseInt(newDeaths)) + "");
-//                            datetxt.setText("As of " + date.substring(0, date.indexOf("T")));
                         }
                     });
                 } catch (JSONException e) {
@@ -825,44 +913,7 @@ public class HomeFragment extends Fragment {
                 }
 
 
-                //JSONObject json = new JSONObject(result);
 
-                // JSONArray contacts = new JSONArray();
-
-                //  JSONArray data = json.getJSONArray("");
-                //  Log.e("date", data + "");
-
-//                for (int i = 0; i < data.length(); i++) {
-//                    JSONObject object = data.getJSONObject(i);
-//                    String cname = object.getString("Country");
-//                    String newcases = object.getString("NewConfirmed");
-//                    String TotalConfirmed = object.getString("TotalConfirmed");
-//                    String TotalDeaths = object.getString("TotalDeaths");
-//                    String NewRecovered = object.getString("NewRecovered");
-//                    String TotalRecovered = object.getString("TotalRecovered");
-//                    String Date = object.getString("Date");
-//                    //New Deaths
-//                    int oldD, newD;
-//                    newD = Integer.parseInt(deathS);
-//
-//
-//                    if (cname.equals(country_name)) {
-//                        Log.e("date", "Country: " + cname + "\nNew Cases: " + newcases + "");
-//                        getActivity().runOnUiThread(new Runnable() {
-//                            public void run() {
-////                                activetxt.setText(getFormatedAmount(Integer.parseInt(TotalConfirmed)) + "");
-////                                deathstxt.setText(getFormatedAmount(Integer.parseInt(TotalDeaths)) + "");
-////                                recoveredtxt.setText(getFormatedAmount(Integer.parseInt(TotalRecovered)) + "");
-////                                affectedtxt.setText(getFormatedAmount(Integer.parseInt(newcases)) + "");
-////                                serioustxt.setText(getFormatedAmount(Integer.parseInt(NewRecovered)) + "");
-//                            }
-//                        });
-//
-//                    }
-//                    //Log.e("aaac", "Country: "+cname+"\nNew Cases: "+newcases + "");
-//
-//
-//                }
             } catch (Exception e) {
                 Log.e("NEWAPI_Err2", e.getLocalizedMessage() + "");
                 e.printStackTrace();
@@ -882,55 +933,12 @@ public class HomeFragment extends Fragment {
         return NumberFormat.getNumberInstance(Locale.US).format(amount);
     }
 
-
-    public void split_data(String data) {
-
-        String[] str1 = data.split("");
-        String datasplited = str1[0];
-        //  Log.e("aaa", datasplited);
-
+    private String getFormatedAmount_double(double amount) {
+        return NumberFormat.getNumberInstance(Locale.US).format(amount);
     }
 
 
-    class http_req extends AsyncTask<Void, String, String> {
 
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-        }
 
-        @Override
-        protected String doInBackground(Void... voids) {
-            StringBuilder content = new StringBuilder();
-            try {
-                URL u1 = new URL(api_json);
-                HttpURLConnection uc1 = (HttpURLConnection) u1.openConnection();
-                if (uc1.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-                    InputStream is = uc1.getInputStream();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-                    String line;
-                    String[] str;
-                    while ((line = br.readLine()) != null) {
-                        content.append(line).append("\n");
-                        //  Log.e("aaaa", content + "");
-                        JSONArray js = new JSONArray(content.toString());
-                        JSONObject obj2 = new JSONObject();
-                        obj2.put("Country", js.toString());
-                        //   Log.e("aaa", obj2.getString("Counrty"));
-
-                    }
-
-                }//other codes
-                return null;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
 }
