@@ -209,13 +209,26 @@
                     android:layout_height="1dp"
                     android:background="#999999" />
 
-                <lecho.lib.hellocharts.view.LineChartView
-                    android:id="@+id/covid_prediction_graph"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:visibility="visible"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                    />
+                    <lecho.lib.hellocharts.view.LineChartView
+                        android:id="@+id/covid_prediction_graph"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:visibility="visible"
+
+                        />
+
+                    <ProgressBar
+                        android:id="@+id/covid_pbr_prediction"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_centerInParent="true"
+                        android:indeterminateTint="@color/oringish"
+                        android:visibility="gone" />
+                </RelativeLayout>
 
 
             </LinearLayout>

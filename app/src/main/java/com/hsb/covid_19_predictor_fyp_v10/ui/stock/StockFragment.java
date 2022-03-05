@@ -77,7 +77,7 @@ public class StockFragment extends Fragment {
     String Stock_Link = "http://api.marketstack.com/v1/eod?access_key=38aa62e0cb3db5a9179b8a48bf79e40b&symbols=AAPL&date_from=";
     String Stock_Link_New = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=psx&apikey=TYV31X78NKKL4LTDa";
     String Stock_Link_New_1 = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=";
-    String Stock_Link_New_2 = "baba";
+    String Stock_Link_New_2 = "msci";
     String Stock_Link_New_3 = "&apikey=TYV31X78NKKL4LTDa";
     TextView stock_txt;
     ProgressBar stock_pbr;
@@ -248,7 +248,7 @@ public class StockFragment extends Fragment {
         covid_cases = new ArrayList();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         for (int i = 0; i < 7; i++) {
-            String a = preferences.getString("day" + i, "2");
+            String a = preferences.getString("day" + i, "0");
             covid_cases.add(a + "");
         }
         if (!covid_cases.get(0).toString().equals("0")) {

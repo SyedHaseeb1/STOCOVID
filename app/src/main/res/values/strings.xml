@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">Corona Fight</string>
+    <string name="app_name">STOCOVID</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="countries">Pakistan</string>
+    <string name="msci">MSCI Inc. is an American finance company headquartered in New York City. MSCI is a global provider of equity, fixed income, real estate indexes, multi-asset portfolio analysis tools, ESG and climate products. It operates the MSCI World, MSCI All Country World Index, MSCI Emerging Markets Indexes.</string>
     <string name="didyouknow">Regular hand washing can eradicate 90% of germs, so it will be difficult for virus to enter into our bodies</string>
 
     <string-array name="country_arrays">

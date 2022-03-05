@@ -65,12 +65,17 @@ public class Crypto extends Fragment {
     int[] yAxisData_crypto;
     String Crypto_Link = "http://api.marketstack.com/v1/eod?access_key=38aa62e0cb3db5a9179b8a48bf79e40b&symbols=AAPL&date_from=";
     String Crypto_Link_New = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=btc&market=pkr&apikey=TYV31X78NKKL4LTD";
+
+
     String Crypto_Link_New_1 = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=";
     String BTC = "btc";
     String ETH = "eth";
     String SHIB = "shib";
     String BNB = "bnb";
+    String ADA = "ada";
     String Crypto_Link_New_3 = "&market=pkr&apikey=8ST8QEFMEETC54NQ";
+
+
     TextView crypto_txt;
     TextView eth_txt;
     TextView shib_txt;

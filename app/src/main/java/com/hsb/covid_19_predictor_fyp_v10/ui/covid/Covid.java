@@ -3,9 +3,11 @@ package com.hsb.covid_19_predictor_fyp_v10.ui.covid;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,6 +69,7 @@ public class Covid extends Fragment {
     private CovidViewModel dashboardViewModel;
     private FragmentCovidBinding binding;
     //TextView countrytxt;
+    int limit_BG_deaths = 0;
     LineChartView cases_graph, prediction_graph;
     List<String> cases_array;
     String countryname = "Pakistan";
@@ -116,7 +119,8 @@ public class Covid extends Fragment {
     //Stock
     SharedPreferences preferences;
     boolean mycovidalgo = false;
-
+    json_data_date_wise_deaths json_data_date_wise_deaths;
+    ProgressBar covid_pbr_prediction;
     StockFragment stockFragment;
 
     @Override
@@ -146,12 +150,13 @@ public class Covid extends Fragment {
         editor.putString("day6", "0");
 
         editor.apply();
-        Log.e("Dist",preferences.getString("day1","1")+"");
+        Log.e("Dist", preferences.getString("day1", "1") + "");
 
         binding = null;
     }
 
     int v = 0;
+    List temp2;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -178,6 +183,7 @@ public class Covid extends Fragment {
 
         covid_pbr = root.findViewById(R.id.covid_pbr);
         stock_pbr = root.findViewById(R.id.stock_pbr);
+        covid_pbr_prediction = root.findViewById(R.id.covid_pbr_prediction);
         New_Global_Caes_API new_global_caes_api = new New_Global_Caes_API();
         cases_array = new ArrayList<>();
         yAxisData = new int[]{7, 6, 5, 4, 3, 2, 1, 0};
@@ -225,6 +231,7 @@ public class Covid extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        json_data_date_wise_deaths = new json_data_date_wise_deaths();
 
         Spinner spinner = (Spinner) root.findViewById(R.id.simpleSpinner);
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>
@@ -237,7 +244,7 @@ public class Covid extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                limit_BG_deaths = 0;
                 try {
                     countryname = spinner.getSelectedItem().toString().trim();
 
@@ -251,6 +258,7 @@ public class Covid extends Fragment {
 
                         v = 0;
                         js_covid.execute();
+
                     }
 
                 } catch (Exception e) {
@@ -473,8 +481,6 @@ public class Covid extends Fragment {
                 }
 
 
-
-
                 List lines = new ArrayList<String>();
                 List lines2 = new ArrayList<String>();
 
@@ -573,7 +579,7 @@ public class Covid extends Fragment {
                                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                                 SharedPreferences.Editor editor = preferences.edit();
                                 for (int i = 0; i < 7; i++) {
-                                    editor.putString("day" + i, temp.get(i)+"");
+                                    editor.putString("day" + i, temp.get(i) + "");
                                     editor.apply();
                                 }
                                 Log.e("COVID_ARRAY", temp + "");
@@ -785,44 +791,6 @@ public class Covid extends Fragment {
     int d = 0;
     List temp;
 
-
-    public int Linear_Regression_ALlo(int days, String day) {
-        //Formula
-        //y = a + bx
-        //b = n(Sum xy) - (Sum x) (Sum y)
-        //a = n(Sum x^2) - (Sum x)^2
-        int Sum_x = 0, Sum_y = 0, Sum_xy = 0;
-        int x = 0, y = 0, a = 0, b = 0, n = 0;
-        int Sum_xSq = 0, Sum_ySq = 0;
-
-        int Sq_x = 0, Sq_y = 0, Sq_xy = 0;
-
-        x = days; //The Day to be Predicted
-        n = 7;//Total Days Given
-        for (int i = 0; i < temp.size(); i++) {
-            Sum_y += Integer.parseInt(temp.get(i) + "");
-            Sum_xy += (i + 1) * Integer.parseInt(temp.get(i) + "");
-        }
-
-        Sum_x = 28;
-        Sum_xSq = 140;
-        //   Sum_y=Sum_y-37289;
-        // Sum_x=Sum_x-7;
-
-
-        b = ((n * Sum_xy) - (Sum_x * Sum_y)) / ((n * Sum_xSq) - (Sum_x * Sum_x));
-        a = ((Sum_y) - (b * Sum_x)) / n;
-        y = a + (b * x);
-        //y = 5327
-        //y = 7258 - b
-
-        if (y < 0) {
-            y = y * (-1);
-        }
-        Log.e("Linear_Regrission", day + " = " + y);
-
-        return y;
-    }
 
     public class DateIncrementer {
         public String addOneDay(String date) {
@@ -1056,11 +1024,11 @@ public class Covid extends Fragment {
                         yAxisValues.clear();
                         for (int aa = 0; aa < temp.size(); aa++) {
                             yAxisValues.add(new PointValue(aa, Integer.parseInt(temp.get(aa) + "")));
-
                         }
+
                         yAxisValues2.clear();
                         //Future Prediction
-                        List temp2 = new ArrayList();
+                        temp2 = new ArrayList();
                         int x = 0;
                         int y = 0;
                         int final_predicted = 0;
@@ -1084,17 +1052,44 @@ public class Covid extends Fragment {
                             Collections.reverse(temp2);
                         } else {
 
-                            //Future graph data
-                            for (int j = 1; j < 8; j++) {
-                                temp2.add(Linear_Regression_ALlo(j, "Days " + j));
+                            //Future graph data Countries
+
+                            try {
+                                if (1 == 1) {
+                                    new json_data_date_wise_deaths().execute();
+                                    limit_BG_deaths++;
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Log.e("temp2", temp2.size() + "");
+                                                    for (int bb = 0; bb < temp2.size(); bb++) {
+                                                        yAxisValues2.add(new PointValue(bb, Integer.parseInt(temp2.get(bb) + "")));
+
+                                                    }
+                                                    prediction_graph.setLineChartData(data2);
+                                                }
+                                            }, 2000);
+
+                                        }
+                                    });
+
+
+                                }
+                            } catch (Exception ee) {
+                                ee.printStackTrace();
                             }
 
+
+//                            for (int j = 0; j < 7; j++) {
+//
+//                                //temp2.add(Linear_Regression_ALlo(j, "Days " + j));
+//                            }
+
                         }
 
-                        for (int bb = 0; bb < temp2.size(); bb++) {
-                            yAxisValues2.add(new PointValue(bb, Integer.parseInt(temp2.get(bb) + "")));
-                            // Log.e("temp", yAxisValues2 + "");
-                        }
 
 //a,b,c,d,e,f,g
                         if (g > f && g > e && g > d) {
@@ -1135,14 +1130,16 @@ public class Covid extends Fragment {
                 }
 
                 cases_graph.setLineChartData(data);
-                prediction_graph.setLineChartData(data2);
+
 
                 Axis axis = new Axis();
                 Axis axis2 = new Axis();
                 axis.setValues(axisValues);
-                axis2.setValues(axisValues2);
                 axis.setMaxLabelChars(1);
+
+                axis2.setValues(axisValues2);
                 axis2.setMaxLabelChars(1);
+
                 Axis yAxis = new Axis();
                 //yAxis.setValues(yAxisValues);
                 data.setAxisYLeft(yAxis.setAutoGenerated(false));
@@ -1219,19 +1216,17 @@ public class Covid extends Fragment {
                         e.printStackTrace();
                     }
                     js_covid.execute();
+
                 }
                 if (v < 1) {
                     v++;
                     js_covid.execute();
+
                 }
 
 
             }
             covid_pbr.setVisibility(View.GONE);
-//            for (int i = 8; i < 15; i++) {
-//                Linear_Regression_ALlo(i, "Day " + i);
-//
-//            }
 
 
             super.onPostExecute(s);
@@ -1282,7 +1277,7 @@ public class Covid extends Fragment {
                         // yAxisData[1] = Integer.parseInt(map.get("Cases").trim());
                         count++;
                         dates.add("" + map.get("Date"));
-                        //  Log.e("bg", dates + "");
+
 
                     }
                     // Log.e("Date " + count, yAxisData[count] + "");
@@ -1328,6 +1323,225 @@ public class Covid extends Fragment {
         today_datetxt.setText(dates.get(dates.size() - 1).toString().replace("T00:00:00Z", "") + "");
         js_covid.execute();
     }
+
+    List deaths_array;
+
+    //COVID-19 DEATHS
+    class json_data_date_wise_deaths extends AsyncTask<Void, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            covid_pbr_prediction.setVisibility(View.VISIBLE);
+            deaths_array = new ArrayList();
+            deaths_array.clear();
+//            dates = new ArrayList();
+//            dates.clear();
+//            cases_array.clear();
+//            yAxisValues.clear();
+//            yAxisValues2.clear();
+//            axisValues.clear();
+//            axisValues2.clear();
+//            covid_pbr.setVisibility(View.VISIBLE);
+//            js_covid = new json_data_date_wise();
+//            temp = new ArrayList();
+            super.onPreExecute();
+        }
+
+        int a = 0, k = 0;
+
+
+        @RequiresApi(api = Build.VERSION_CODES.Q)
+        @Override
+        protected String doInBackground(Void... voids) {
+
+
+            try {
+                URL url = new URL(from_this_to_this.replace("confirmed", "deaths"));
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"), 8);
+                StringBuilder sb = new StringBuilder();
+
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                String result = sb.toString();
+                JSONArray array;
+                try {
+                    array = new JSONArray(result);
+                    JSONObject object;
+                    int count = 0;
+                    Map<String, String> map = null;
+                    for (int i = 0; i < array.length(); i++) {
+
+                        object = new JSONObject(array.getJSONObject(i).toString());
+                        map = new HashMap<String, String>();
+                        Iterator<?> iter = object.keys();
+                        while (iter.hasNext()) {
+                            String key = (String) iter.next();
+                            String value = object.getString(key);
+                            map.put(key, value);
+
+
+                        }
+
+
+                        a++;
+                        count++;
+                        deaths_array.add(map.get("Cases") + "");
+
+
+                    }
+                    Collections.reverse(deaths_array);
+                    int d_deaths_1 = Integer.parseInt(deaths_array.get(0) + "");
+                    int d_deaths_2 = Integer.parseInt(deaths_array.get(1) + "");
+                    int d_deaths_3 = Integer.parseInt(deaths_array.get(2) + "");
+                    int d_deaths_4 = Integer.parseInt(deaths_array.get(3) + "");
+                    int d_deaths_5 = Integer.parseInt(deaths_array.get(4) + "");
+                    int d_deaths_6 = Integer.parseInt(deaths_array.get(5) + "");
+                    int d_deaths_7 = Integer.parseInt(deaths_array.get(6) + "");
+
+                    int day1;
+                    int day2;
+                    int day3;
+                    int day4;
+                    int day5;
+                    int day6;
+                    int day7;
+                    int Sum_x;
+                    day1 = d_deaths_1 - d_deaths_2;
+                    day2 = d_deaths_2 - d_deaths_3;
+                    day3 = d_deaths_3 - d_deaths_4;
+                    day4 = d_deaths_4 - d_deaths_5;
+                    day5 = d_deaths_5 - d_deaths_6;
+                    day6 = d_deaths_6 - d_deaths_7;
+                    Sum_x = day1 + day2 + day3 + day4 + day5 + day6;
+                    int days = deaths_array.size() - 1;
+                    temp2.add(Linear_Regression_ALlo_2(day1, Sum_x, days) + "");
+                    temp2.add(Linear_Regression_ALlo_2(day2, Sum_x, days) + "");
+                    temp2.add(Linear_Regression_ALlo_2(day3, Sum_x, days) + "");
+                    temp2.add(Linear_Regression_ALlo_2(day4, Sum_x, days) + "");
+                    temp2.add(Linear_Regression_ALlo_2(day5, Sum_x, days) + "");
+                    temp2.add(Linear_Regression_ALlo_2(day6, Sum_x, days) + "");
+                    temp2.add(Linear_Regression_ALlo_2(day2+9, Sum_x, days) + "");
+
+                    Log.e("COVID_DEATHS_Linear", "DEATHS: \n"
+                            + day1+"\n"
+                            + day2+"\n"
+                            + day3+"\n"
+                            + day4+"\n"
+                            + day5+"\n"
+                            + day6+"\n"
+
+                    );
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (Exception e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "Service is down for maintenance, Please try again later", Toast.LENGTH_SHORT).show();
+                        Log.e("deaths err", e.getLocalizedMessage());
+                    }
+                });
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            covid_pbr_prediction.setVisibility(View.GONE);
+            super.onPostExecute(s);
+        }
+    }
+
+    public int Linear_Regression_ALlo(int days, String day) {
+        //Formula
+        //y = a + bx
+        //b = n(Sum xy) - (Sum x) (Sum y)
+        //a = n(Sum x^2) - (Sum x)^2
+        int Sum_x = 0, Sum_y = 0, Sum_xy = 0;
+        int x = 0, y = 0, a = 0, b = 0, n = 0;
+        int Sum_xSq = 0, Sum_ySq = 0;
+
+        int Sq_x = 0, Sq_y = 0, Sq_xy = 0;
+
+        x = days; //The Day to be Predicted
+        n = 7;//Total Days Given
+        for (int i = 0; i < temp.size(); i++) {
+            Sum_y += Integer.parseInt(temp.get(i) + "");
+            Sum_xy += (i + 1) * Integer.parseInt(temp.get(i) + "");
+        }
+
+        Sum_x = 28;
+        Sum_xSq = 140;
+        //   Sum_y=Sum_y-37289;
+        // Sum_x=Sum_x-7;
+
+
+        b = ((n * Sum_xy) - (Sum_x * Sum_y)) / ((n * Sum_xSq) - (Sum_x * Sum_x));
+        a = ((Sum_y) - (b * Sum_x)) / n;
+        y = a + (b * x);
+        //y = 5327
+        //y = 7258 - b
+
+        if (y < 0) {
+            y = y * (-1);
+        }
+        Log.e("Linear_Regrission", day + " = " + y);
+
+        return y;
+    }
+
+    public int Linear_Regression_ALlo_2(int es_deaths, int Sum_x, int days) {
+        //Formula
+        //y = a + bx
+        //b = n(Sum xy) - (Sum x) (Sum y)
+        //a = n(Sum x^2) - (Sum x)^2
+        int Sum_y = 0, Sum_xy = 0;
+        int x = 0, y = 0, a = 0, b = 0, n = 0;
+        int Sum_xSq = 0, Sum_ySq = 0;
+
+        int Sq_x = 0, Sq_y = 0, Sq_xy = 0;
+
+        x = es_deaths; // Given against perdiction, ie deaths
+
+        n = days;//Total Days/Values Given
+
+        for (int i = 0; i < temp.size(); i++) {
+            Sum_y += Integer.parseInt(temp.get(i) + ""); //Cases per day
+            Sum_xy += (x) * Integer.parseInt(temp.get(i) + "");
+        }
+
+        //Sum_x = 28; //Deaths per day
+        Sum_xSq = Sum_x * Sum_x;
+        //   Sum_y=Sum_y-37289;
+        // Sum_x=Sum_x-7;
+
+
+        b = ((n * Sum_xy) - (Sum_x * Sum_y)) / ((n * Sum_xSq) - (Sum_x * Sum_x));
+        a = ((Sum_y) - (b * Sum_x)) / n;
+        y = a + (b * x);
+
+        //y = 5327
+        //y = 7258 - b
+
+        if (y < 0) {
+            y = y * (-1);
+        }
+        Log.e("Linear_Regression_2.0", es_deaths + " = " + Double.parseDouble(y + "") + "\n");
+
+        return y;
+    }
+
+
     /**COVID-19 DATA AND GRAPH*/
 
 }
